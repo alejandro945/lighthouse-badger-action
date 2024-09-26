@@ -1,7 +1,51 @@
 name: 'LightHouse Badger'
-description: 'This actions takes a Lighthouse report and generate svg badges for each category and store them as artifacts or upload them to an external service.'
+description: 'This action takes a Lighthouse report, generates SVG badges for each category, and uploads them to an external service (S3 or Azure Blob Storage).'
 author: 'Alejandro Varela'
 
+branding:
+  icon: 'activity'
+  color: 'green'
+
+inputs:
+  s3-bucket-name:
+    description: 'The S3 bucket name where SVG badges will be uploaded.'
+    required: false
+  s3-access-key-id:
+    description: 'The AWS access key ID for S3 upload.'
+    required: false
+  s3-secret-access-key:
+    description: 'The AWS secret access key for S3 upload.'
+    required: false
+  s3-region:
+    description: 'The AWS region for S3 upload.'
+    required: false
+
+  azure-container-name:
+    description: 'The Azure Blob container name where SVG badges will be uploaded.'
+    required: false
+  azure-storage-account-name:
+    description: 'The Azure Storage account name.'
+    required: false
+  azure-storage-account-key:
+    description: 'The Azure Storage account key.'
+    required: false
+
+  upload-destination:
+    description: 'The destination for uploading SVG badges. Can be "s3" or "azure".'
+    required: true
+    default: 's3'
+  
+  reports-path:
+    description: 'The path to the Lighthouse reports.'
+    required: true
+    default: './lighthouse-reports'
+
+outputs:
+  s3-url:
+    description: 'The URL of the uploaded SVG badges in S3.'
+  azure-blob-url:
+    description: 'The URL of the uploaded SVG badges in Azure Blob Storage.'
+
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
