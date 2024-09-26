@@ -1,0 +1,7 @@
+name: 'LightHouse Badger'
+description: 'This actions takes a Lighthouse report and generate svg badges for each category and store them as artifacts or upload them to an external service.'
+author: 'Alejandro Varela'
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
