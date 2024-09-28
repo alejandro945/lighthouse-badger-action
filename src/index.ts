@@ -43,12 +43,15 @@ async function run() {
 
       for (const label of resultCategories) {
         const score = report.categories[label]?.score * 100;
+        const url = report?.finalUrl || '/main';
+        let urlPath = url.replace(/(^\w+:|^)\/\/[^/]+/, '');
+        urlPath = urlPath == '/' ? '/main' : urlPath;
         let color = 'red';
         if (score >= 90) color = 'green';
         else if (score >= 50) color = 'orange';
 
         const svg = badgen({ label, status: score.toString(), color });
-        const svgFileName = path.join(reportsPath, file.replace('report.json', `${label}.svg`));
+        const svgFileName = `${urlPath}.${label}.svg`;
         fs.writeFileSync(svgFileName, svg);
 
         // Subir el SVG a S3 o Azure

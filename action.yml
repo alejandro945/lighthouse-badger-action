@@ -19,6 +19,9 @@ inputs:
   s3-region:
     description: 'The AWS region for S3 upload.'
     required: false
+  s3-prefix:
+    description: 'The prefix for the S3 object key.'
+    required: false
 
   azure-container-name:
     description: 'The Azure Blob container name where SVG badges will be uploaded.'

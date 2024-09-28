@@ -20,6 +20,7 @@
 | `s3-access-key-id`          | The AWS access key ID for S3 upload.                           | false    |         |
 | `s3-secret-access-key`      | The AWS secret access key for S3 upload.                       | false    |         |
 | `s3-region`                 | The AWS region for S3 upload.                                  | false    |         |
+| `s3-prefix`                 | The prefix to add to the uploaded SVG badges in S3.            | false    |         |
 | `azure-container-name`      | The Azure Blob container name for uploading SVG badges.        | false    |         |
 | `azure-storage-account-name`| The Azure Storage account name.                                | false    |         |
 | `azure-storage-account-key` | The Azure Storage account key.                                 | false    |         |
@@ -56,6 +57,7 @@ jobs:
           s3-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           s3-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           s3-region: 'us-west-2'
+          s3-prefix: 'lighthouse-badges'
           upload-destination: 's3'
           report-path: '.lighthouseci'
           result-categories: 'performance,accessibility,best-practices,seo,pwa'
