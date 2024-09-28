@@ -15,6 +15,7 @@ async function run() {
     const s3AccessKeyId = core.getInput('s3-access-key-id');
     const s3SecretAccessKey = core.getInput('s3-secret-access-key');
     const s3Region = core.getInput('s3-region');
+    const s3Prefix = core.getInput('s3-prefix') || '';
 
     const azureContainerName = core.getInput('azure-container-name');
     const azureStorageAccountName = core.getInput('azure-storage-account-name');
@@ -51,12 +52,14 @@ async function run() {
         else if (score >= 50) color = 'orange';
 
         const svg = badgen({ label, status: score.toString(), color });
-        const svgFileName = `${urlPath}.${label}.svg`;
+        const svgFileName = path.join(reportsPath, file.replace('report.json', `${label}.svg`));
+
         fs.writeFileSync(svgFileName, svg);
 
         // Subir el SVG a S3 o Azure
         if (uploadDestination === 's3') {
-          await uploadToS3(svgFileName, s3BucketName, s3AccessKeyId, s3SecretAccessKey, s3Region);
+          const rawName = `${s3Prefix}${urlPath}.${label}.svg`;
+          await uploadToS3(svgFileName, s3BucketName, s3AccessKeyId, s3SecretAccessKey, s3Region, rawName);
         } else if (uploadDestination === 'azure') {
           await uploadToAzure(svgFileName, azureContainerName, azureStorageAccountName, azureStorageAccountKey);
         }
@@ -75,7 +78,7 @@ async function run() {
  * @param secretAccessKey 
  * @param region 
  */
-async function uploadToS3(filePath: string, bucketName: string, accessKeyId: string, secretAccessKey: string, region: string) {
+async function uploadToS3(filePath: string, bucketName: string, accessKeyId: string, secretAccessKey: string, region: string, rawName: string) {
   const s3 = new AWS.S3({
     accessKeyId,
     secretAccessKey,
@@ -87,7 +90,7 @@ async function uploadToS3(filePath: string, bucketName: string, accessKeyId: str
 
   const params = {
     Bucket: bucketName,
-    Key: fileName,
+    Key: rawName,
     Body: fileContent,
     ContentType: 'image/svg+xml',
   };
