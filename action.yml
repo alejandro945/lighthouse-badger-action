@@ -38,7 +38,12 @@ inputs:
   reports-path:
     description: 'The path to the Lighthouse reports.'
     required: true
-    default: './lighthouse-reports'
+    default: './.lighthouseci'
+  
+  result-categories:
+    description: 'Comma-separated list of Lighthouse result categories.'
+    required: false
+    default: 'performance,accessibility,best-practices,seo'
 
 outputs:
   s3-url:

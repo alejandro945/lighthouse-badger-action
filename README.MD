@@ -24,6 +24,8 @@
 | `azure-storage-account-name`| The Azure Storage account name.                                | false    |         |
 | `azure-storage-account-key` | The Azure Storage account key.                                 | false    |         |
 | `upload-destination`        | Destination for uploading SVG badges: `"s3"` or `"azure"`.     | true     | `s3`    |
+| `report-path`               | Path to the Lighthouse report directory.                       | false    | `.lighthouseci` |
+| `result-categories`         | Comma-separated list of Lighthouse categories to generate badges for. | false | `performance,accessibility,best-practices,seo,pwa` |
 
 ## Outputs
 
@@ -55,6 +57,8 @@ jobs:
           s3-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           s3-region: 'us-west-2'
           upload-destination: 's3'
+          report-path: '.lighthouseci'
+          result-categories: 'performance,accessibility,best-practices,seo,pwa'
       
       - name: Output S3 URL
         run: echo "Badges uploaded to: ${{ steps.lighthouse-badger.outputs.s3-url }}"
@@ -80,6 +84,8 @@ jobs:
           azure-storage-account-name: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
           azure-storage-account-key: ${{ secrets.AZURE_STORAGE_KEY }}
           upload-destination: 'azure'
+          report-path: '.lighthouseci'
+          result-categories: 'accessibility,best-practices,seo,pwa'
 
       - name: Output Azure Blob URL
         run: echo "Badges uploaded to: ${{ steps.lighthouse-badger.outputs.azure-blob-url }}"

@@ -20,7 +20,10 @@ async function run() {
     const azureStorageAccountName = core.getInput('azure-storage-account-name');
     const azureStorageAccountKey = core.getInput('azure-storage-account-key');
 
-    const resultCategories = ['performance', 'accessibility', 'best-practices', 'seo', 'pwa'];
+    const resultCategories = core
+      .getInput('result-categories')
+      .split(',')
+      .map(category => category.trim());
 
     // Leer los archivos de reportes
     const reportFiles = fs.readdirSync(reportsPath).filter(file => file.endsWith('.report.json'));
@@ -90,7 +93,7 @@ async function uploadToS3(filePath: string, bucketName: string, accessKeyId: str
     const data = await s3.upload(params).promise();
     core.setOutput('s3-url', data.Location);
     core.info(`Uploaded ${fileName} to S3: ${data.Location}`);
-  } catch (error : any) {
+  } catch (error: any) {
     core.setFailed(`Failed to upload ${fileName} to S3: ${error.message}`);
   }
 }
@@ -118,7 +121,7 @@ async function uploadToAzure(filePath: string, containerName: string, accountNam
     const blobUrl = blockBlobClient.url;
     core.setOutput('azure-blob-url', blobUrl);
     core.info(`Uploaded ${blobName} to Azure Blob Storage: ${blobUrl}`);
-  } catch (error : any) {
+  } catch (error: any) {
     core.setFailed(`Failed to upload ${blobName} to Azure Blob Storage: ${error.message}`);
   }
 }
