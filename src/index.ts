@@ -43,7 +43,7 @@ async function run() {
       }
 
       for (const label of resultCategories) {
-        const score = report.categories[label]?.score * 100;
+        const score = Math.ceil((report.categories[label]?.score * 100));
         const url = report?.finalUrl || '/main';
         let urlPath = url.replace(/(^\w+:|^)\/\/[^/]+/, '');
         urlPath = urlPath == '/' ? '/main' : urlPath;
@@ -86,7 +86,6 @@ async function uploadToS3(filePath: string, bucketName: string, accessKeyId: str
   });
 
   const fileContent = fs.readFileSync(filePath);
-  const fileName = path.basename(filePath);
 
   const params = {
     Bucket: bucketName,
@@ -98,9 +97,9 @@ async function uploadToS3(filePath: string, bucketName: string, accessKeyId: str
   try {
     const data = await s3.upload(params).promise();
     core.setOutput('s3-url', data.Location);
-    core.info(`Uploaded ${fileName} to S3: ${data.Location}`);
+    core.info(`Uploaded ${rawName} to S3: ${data.Location}`);
   } catch (error: any) {
-    core.setFailed(`Failed to upload ${fileName} to S3: ${error.message}`);
+    core.setFailed(`Failed to upload ${rawName} to S3: ${error.message}`);
   }
 }
 
